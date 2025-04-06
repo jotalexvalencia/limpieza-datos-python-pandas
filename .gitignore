@@ -1,0 +1,4 @@
+.qodo
+*.pyc  
+__pycache__/  
+env/  
