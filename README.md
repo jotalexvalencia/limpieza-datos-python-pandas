@@ -1,6 +1,8 @@
 
 # Limpieza de Datos con Python y Pandas
 
+![Diagrama BPMN](assets/images/diagrama-bpmn.png)
+
 ## Descripción
 Este proyecto incluye un script que elimina **outliers** en un dataset de ventas utilizando el método **IQR (Rango Intercuartílico)**.
 
