@@ -95,4 +95,5 @@ El archivo `ventas_limpias.csv` se carga automáticamente a AWS S3 utilizando el
 Jorge Alexander Valencia Valencia
 
 ## Licencia
-Este proyecto está bajo la Licencia MIT. Para más detalles, consulta el archivo `LICENSE`.
+Este proyecto está bajo la [Licencia MIT](LICENSE) © 2025 Jorge Alexander Valencia Valencia. Para más detalles, consulta el archivo `LICENSE`.
+
