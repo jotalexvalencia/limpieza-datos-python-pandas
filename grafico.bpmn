@@ -1,0 +1,51 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#007AA5', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007AA5', 'lineColor': '#F8B229', 'secondaryColor': '#006100', 'tertiaryColor': '#fff'}}}%%
+flowchart TD
+    %% Pools y Lanes
+    subgraph Usuario["Usuario"]
+        inicio(("Inicio")) -->|Iniciar proceso| subir[Subir Archivo\nventas.csv]
+        subir --> procesar[Procesamiento de Datos]
+    end
+
+    subgraph Procesamiento["Procesamiento de Datos"]
+        procesar --> |Ejecutar process_data.py| cargar[Cargar datos\ndesde ventas.csv]
+        cargar --> calcular[Calcular Q1, Q3, IQR\ny límites]
+        calcular --> filtrar[Filtrar outliers]
+        filtrar --> guardar[Guardar datos en\nventas_limpias.csv]
+        guardar --> mostrar[Mostrar información\nde outliers eliminados]
+    end
+
+    subgraph GitHub_Actions["GitHub Actions Workflow"]
+        mostrar --> |Push a rama\ndev-python| githubTrigger[Activar GitHub\nActions]
+        githubTrigger --> verificar{¿Existe\nventas_limpias.csv?}
+        verificar -->|Sí| config[Configurar\ncredenciales AWS]
+        verificar -->|No| error[Mostrar error\ny terminar]
+        config --> subirs3[Subir a S3]
+        subirs3 --> listar[Listar archivos\nen S3]
+    end
+
+    %% Conexiones entre pools
+    listar --> fin(("Fin"))
+    error --> fin
+
+    %% Objetos de datos
+    ventascsv[(ventas.csv)] -.-> cargar
+    ventaslimpiascsv[(ventas_limpias.csv)] -.-> verificar
+    s3[(AWS S3\nBucket)] -.-> subirs3
+
+    %% Comentarios
+    comentario1["Archivo de entrada\ncon datos crudos"] -.-> ventascsv
+    comentario2["Archivo procesado\nsin outliers"] -.-> ventaslimpiascsv
+    comentario3["Almacenamiento\npersistente en la nube"] -.-> s3
+
+    %% Estilos
+    classDef evento fill:#FFCC00,stroke:#FF9900,color:black
+    classDef actividad fill:#99CCFF,stroke:#3366FF,color:black
+    classDef bifurcador fill:#FF99CC,stroke:#FF3399,color:black
+    classDef datos fill:#99FF99,stroke:#339933,color:black
+    classDef comentario fill:#FFFFCC,stroke:#FFCC00,color:black
+    
+    class inicio,fin evento
+    class subir,procesar,cargar,calcular,filtrar,guardar,mostrar,githubTrigger,config,subirs3,listar,error actividad
+    class verificar bifurcador
+    class ventascsv,ventaslimpiascsv,s3 datos
+    class comentario1,comentario2,comentario3 comentario
