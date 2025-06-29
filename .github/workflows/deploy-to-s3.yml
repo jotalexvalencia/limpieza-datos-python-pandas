@@ -28,6 +28,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Debe estar encriptada como secreto
           aws-region: us-east-1  # Región del bucket S3 donde se cargan los archivos
 
+      - name: 🧪 Instalar dependencias desde requirements.txt
+        run: pip install -r requirements.txt
+        
       - name: 🧼 Ejecutar limpieza de datos con process_data.py
         run: python scripts/process_data.py  # ACTUALIZADO: archivo movido a carpeta 'scripts'
 
