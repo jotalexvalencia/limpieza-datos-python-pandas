@@ -1,5 +1,50 @@
+# ========================================
+# 🐍 Ignorar archivos y carpetas de Python
+# ========================================
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+*.pyd
+*.pyo
+*.pdb
+*.spec
+
+# ========================================
+# 🗂️ Ignorar entornos virtuales locales
+# ========================================
+env/
+.venv/
+
+# ========================================
+# 💽 Ignorar archivos de sistema operativos
+# ========================================
+.DS_Store       # macOS
+Thumbs.db       # Windows
+*.swp           # Archivos temporales de editores (vim, nano)
+
+# ========================================
+# 📚 Ignorar notebooks temporales
+# ========================================
+*.ipynb_checkpoints
+
+# ========================================
+# ⚙️ Ignorar herramientas de desarrollo o extensión
+# ========================================
+.qodo/
 .qodo/*
-*.pyc  
-__pycache__/  
-env/  
-.qodo
+
+# ========================================
+# 📈 Archivos generados por scripts
+# ========================================
+ventas_limpias.csv
+boxplot_antes.png
+boxplot_despues.png
+assets/images/
+
+# ========================================
+# 🧪 Opcional: carpetas de distribución o compilación
+# ========================================
+dist/
+build/

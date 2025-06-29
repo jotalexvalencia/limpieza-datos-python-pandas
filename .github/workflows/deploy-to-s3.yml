@@ -1,34 +1,45 @@
+# ================================================
+# 🌐 Flujo GitHub Actions: Despliegue a S3 (AWS)
+# Archivo: deploy-to-s3.yml
+# Autor: jorgealexandervalencia@gmail.com
+# Rama de activación: dev-python
+# Objetivo: Automatizar limpieza de datos y carga del archivo 'ventas_limpias.csv' al bucket S3
+# ================================================
+
 name: Deploy to S3  # Nombre del flujo de trabajo
 
 on:
-  push:  # El flujo se activa cada vez que haces un push a la rama configurada (predeterminada: 'dev-python')
+  push:  # El flujo se activa cada vez que se hace un push a la rama configurada
     branches:
-      - dev-python  # Especifica la rama en la que trabajas (puedes cambiarla si es necesario)
+      - dev-python  # Cambiar si trabajás en otra rama
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Se ejecuta en un contenedor Ubuntu proporcionado por GitHub Actions
+    runs-on: ubuntu-latest  # El flujo se ejecuta en una VM Linux provista por GitHub
 
     steps:
-      - name: Checkout code  # Descarga el código del repositorio en el contenedor
-        uses: actions/checkout@v3
+      - name: 🧾 Checkout del código
+        uses: actions/checkout@v3  # Descarga el contenido del repositorio al entorno
 
-      - name: Configure AWS Credentials  # Configura las credenciales para AWS
+      - name: 🔐 Configurar credenciales AWS
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Acceso a la clave configurada como secreto en tu repositorio
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Clave secreta configurada en tu repositorio
-          aws-region: us-east-1  # Configura la región de tu bucket en AWS
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Definida en Settings > Secrets
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Debe estar encriptada como secreto
+          aws-region: us-east-1  # Región del bucket S3 donde se cargan los archivos
 
-      - name: Verificar la existencia del archivo  # Paso opcional para validar la presencia del archivo antes de subirlo
+      - name: 🧼 Ejecutar limpieza de datos con process_data.py
+        run: python scripts/process_data.py  # ACTUALIZADO: archivo movido a carpeta 'scripts'
+
+      - name: 🔍 Verificar existencia del archivo limpio
         run: |
           if [ ! -f ventas_limpias.csv ]; then
-            echo "ERROR: El archivo ventas_limpias.csv no existe. Por favor, verifica antes de intentar subirlo." 
-            exit 1  # Finaliza el flujo si no encuentra el archivo
+            echo "ERROR: El archivo ventas_limpias.csv no fue generado."
+            exit 1
           fi
 
-      - name: Upload to S3  # Comando para cargar el archivo a tu bucket de S3
-        run: aws s3 cp ventas_limpias.csv s3://limpieza-datos-alex/  # Reemplaza el archivo existente en S3 si ya está
+      - name: ☁️ Subir archivo a Amazon S3
+        run: aws s3 cp ventas_limpias.csv s3://limpieza-datos-alex/  # Reemplaza el archivo si ya existe
 
-      - name: Listar archivos en S3 (opcional)  # Verifica que el archivo fue subido correctamente
-        run: aws s3 ls s3://limpieza-datos-alex/  # Lista los archivos en el bucket para confirmar el despliegue
+      - name: 📋 Listar archivos en el bucket (verificación opcional)
+        run: aws s3 ls s3://limpieza-datos-alex/  # Permite comprobar que el archivo fue subido correctamente
