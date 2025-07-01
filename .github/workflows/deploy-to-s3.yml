@@ -3,46 +3,53 @@
 # Archivo: deploy-to-s3.yml
 # Autor: jorgealexandervalencia@gmail.com
 # Rama de activación: dev-python
-# Objetivo: Automatizar limpieza de datos y carga del archivo 'ventas_limpias.csv' al bucket S3
+# Objetivo: Automatizar limpieza de datos, generar imágenes y cargar resultados al bucket S3
 # ================================================
 
-name: Deploy to S3  # Nombre del flujo de trabajo
+name: Deploy to S3  # Nombre del flujo de trabajo visible en GitHub Actions
 
 on:
-  push:  # El flujo se activa cada vez que se hace un push a la rama configurada
+  push:  # El flujo se activa automáticamente con cada push
     branches:
-      - dev-python  # Cambiar si trabajás en otra rama
+      - dev-python  # Rama sobre la que debe ocurrir el push para activar el flujo
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # El flujo se ejecuta en una VM Linux provista por GitHub
+    runs-on: ubuntu-latest  # El flujo se ejecuta en un entorno Ubuntu proporcionado por GitHub
 
     steps:
       - name: 🧾 Checkout del código
-        uses: actions/checkout@v3  # Descarga el contenido del repositorio al entorno
+        uses: actions/checkout@v3  # Descarga el contenido actual del repositorio al entorno virtual
 
       - name: 🔐 Configurar credenciales AWS
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Definida en Settings > Secrets
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Debe estar encriptada como secreto
-          aws-region: us-east-1  # Región del bucket S3 donde se cargan los archivos
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Clave pública AWS guardada como secreto
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Clave privada AWS como secreto seguro
+          aws-region: us-east-1  # Región donde está ubicado tu bucket de S3
 
       - name: 🧪 Instalar dependencias desde requirements.txt
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt  # Asegura que estén disponibles todas las librerías necesarias
         
       - name: 🧼 Ejecutar limpieza de datos con process_data.py
-        run: python scripts/process_data.py  # ACTUALIZADO: archivo movido a carpeta 'scripts'
+        run: python scripts/process_data.py  # Procesa y limpia el archivo de datos, guardando ventas_limpias.csv
 
       - name: 🔍 Verificar existencia del archivo limpio
         run: |
           if [ ! -f ventas_limpias.csv ]; then
             echo "ERROR: El archivo ventas_limpias.csv no fue generado."
             exit 1
-          fi
+          fi  # Detiene el workflow si el archivo CSV no se creó correctamente
 
-      - name: ☁️ Subir archivo a Amazon S3
-        run: aws s3 cp ventas_limpias.csv s3://limpieza-datos-alex/  # Reemplaza el archivo si ya existe
+      - name: ☁️ Subir archivo limpio a Amazon S3
+        run: aws s3 cp ventas_limpias.csv s3://limpieza-datos-alex/  # Sube el archivo .csv al bucket raíz
+
+      - name: 🖼️ Subir imágenes de análisis a Amazon S3
+        run: |
+          aws s3 cp assets/images/ s3://limpieza-datos-alex/images/ --recursive --exclude "*.DS_Store"
+          # ▸ --recursive: recorre toda la carpeta y sube archivos al bucket conservando estructura
+          # ▸ --exclude "*.DS_Store": evita subir archivos ocultos generados por MacOS si algún colaborador usa Mac
+          #    (seguro para Windows y Ubuntu; sirve como filtro general de basura del sistema)
 
       - name: 📋 Listar archivos en el bucket (verificación opcional)
-        run: aws s3 ls s3://limpieza-datos-alex/  # Permite comprobar que el archivo fue subido correctamente
+        run: aws s3 ls s3://limpieza-datos-alex/  # Muestra listado de archivos que llegaron correctamente a S3
