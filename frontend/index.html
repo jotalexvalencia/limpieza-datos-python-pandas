@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SPA de Carga CSV</title>
+
+  <!-- 🎨 Enlace al archivo de estilos CSS -->
+  <link
+    rel="stylesheet"
+    href="/static/css/style.css"
+  >
+
+  <!-- 🧠 Favicon vacío para evitar errores en consola -->
+  <link
+    rel="icon"
+    href="data:;base64,iVBORw0KGgo="
+  />
+</head>
+
+<body>
+  <h1>Carga de Archivo CSV</h1>
+
+  <!-- 📂 Selector de archivo CSV -->
+  <input
+    type="file"
+    id="csvFile"
+  />
+
+  <!-- 🚀 Botón que dispara la función subir() -->
+  <button onclick="subir()">Subir</button>
+
+  <!-- 📢 Área donde se mostrará el mensaje de éxito o error -->
+  <div id="mensaje"></div>
+
+  <!-- 🧠 Enlace al script JS que maneja la subida del archivo -->
+  <script src="/static/js/upload.js"></script>
+</body>
+
+</html>

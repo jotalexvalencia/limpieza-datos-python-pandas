@@ -1,0 +1,81 @@
+﻿fecha,producto,ventas,region
+1/01/2024,Producto A,1500,Amazonas
+2/01/2024,Producto B,2300,Pacífico
+3/01/2024,Producto C,1800,Andina
+4/01/2024,Producto D,35000,Caribe  # Outlier
+5/01/2024,Producto E,3200,Bogotá
+6/01/2024,Producto A,4500,Medellín
+7/01/2024,Producto B,1900,Cali
+8/01/2024,Producto C,2100,Barranquilla
+9/01/2024,Producto D,4800,Bucaramanga
+10/01/2024,Producto E,2700,Pereira
+11/01/2024,Producto A,1600,Amazonas
+12/01/2024,Producto B,2400,Pacífico
+13/01/2024,Producto C,1700,Andina
+14/01/2024,Producto D,40000,Caribe  # Outlier
+15/01/2024,Producto E,3300,Bogotá
+16/01/2024,Producto A,4600,Medellín
+17/01/2024,Producto B,2000,Cali
+18/01/2024,Producto C,2200,Barranquilla
+19/01/2024,Producto D,4900,Bucaramanga
+20/01/2024,Producto E,2800,Pereira
+21/01/2024,Producto A,1550,Amazonas
+22/01/2024,Producto B,2350,Pacífico
+23/01/2024,Producto C,1850,Andina
+24/01/2024,Producto D,42000,Caribe  # Outlier
+25/01/2024,Producto E,3400,Bogotá
+26/01/2024,Producto A,4700,Medellín
+27/01/2024,Producto B,2100,Cali
+28/01/2024,Producto C,2300,Barranquilla
+29/01/2024,Producto D,5000,Bucaramanga
+30/01/2024,Producto E,2900,Pereira
+31/01/2024,Producto A,1650,Amazonas
+1/02/2024,Producto B,2450,Pacífico
+2/02/2024,Producto C,1950,Andina
+3/02/2024,Producto D,45000,Caribe  # Outlier
+4/02/2024,Producto E,3500,Bogotá
+5/02/2024,Producto A,4800,Medellín
+6/02/2024,Producto B,2200,Cali
+7/02/2024,Producto C,2400,Barranquilla
+8/02/2024,Producto D,5100,Bucaramanga
+9/02/2024,Producto E,3000,Pereira
+10/02/2024,Producto A,1700,Amazonas
+11/02/2024,Producto B,2500,Pacífico
+12/02/2024,Producto C,2000,Andina
+13/02/2024,Producto D,47000,Caribe  # Outlier
+14/02/2024,Producto E,3600,Bogotá
+15/02/2024,Producto A,4900,Medellín
+16/02/2024,Producto B,2300,Cali
+17/02/2024,Producto C,2500,Barranquilla
+18/02/2024,Producto D,5200,Bucaramanga
+19/02/2024,Producto E,3100,Pereira
+20/02/2024,Producto A,1800,Amazonas
+21/02/2024,Producto B,2600,Pacífico
+22/02/2024,Producto C,2100,Andina
+23/02/2024,Producto D,49000,Caribe  # Outlier
+24/02/2024,Producto E,3700,Bogotá
+25/02/2024,Producto A,5000,Medellín
+26/02/2024,Producto B,2400,Cali
+27/02/2024,Producto C,2600,Barranquilla
+28/02/2024,Producto D,5300,Bucaramanga
+1/03/2024,Producto E,3200,Pereira
+2/03/2024,Producto A,1900,Amazonas
+3/03/2024,Producto B,2700,Pacífico
+4/03/2024,Producto C,2200,Andina
+5/03/2024,Producto D,52000,Caribe  # Outlier
+6/03/2024,Producto E,3800,Bogotá
+7/03/2024,Producto A,5100,Medellín
+8/03/2024,Producto B,2500,Cali
+9/03/2024,Producto C,2700,Barranquilla
+10/03/2024,Producto D,5400,Bucaramanga
+11/03/2024,Producto E,3300,Pereira
+12/03/2024,Producto A,2000,Amazonas
+13/03/2024,Producto B,2800,Pacífico
+14/03/2024,Producto C,2300,Andina
+15/03/2024,Producto D,55000,Caribe  # Outlier
+16/03/2024,Producto E,3900,Bogotá
+17/03/2024,Producto A,5200,Medellín
+18/03/2024,Producto B,2600,Cali
+19/03/2024,Producto C,2800,Barranquilla
+20/03/2024,Producto D,5500,Bucaramanga
+21/03/2024,Producto E,3400,Pereira

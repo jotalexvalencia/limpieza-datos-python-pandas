@@ -10,32 +10,45 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
+import sys
+
+# === 🎯 Configuración de rutas ===
+ORIGINAL_CSV = "ventas.csv"
+LIMPIO_CSV = "ventas_limpias.csv"
+IMG_DIR = "assets/images"
+IMG_ANTES = os.path.join(IMG_DIR, "boxplot_antes.png")
+IMG_DESPUES = os.path.join(IMG_DIR, "boxplot_despues.png")
 
 
 def cargar_datos(ruta_csv):
     """Carga un archivo CSV y devuelve un DataFrame de pandas."""
+    if not os.path.exists(ruta_csv):
+        print(f"❌ Error: el archivo {ruta_csv} no fue encontrado.")
+        return None
     try:
         df = pd.read_csv(ruta_csv)
         print(f"✅ Datos cargados correctamente desde {ruta_csv}")
         return df
-    except FileNotFoundError:
-        print(f"❌ Error: el archivo {ruta_csv} no fue encontrado.")
+    except Exception as e:
+        print(f"❌ Error al leer {ruta_csv}: {str(e)}")
         return None
 
 
-def graficar_boxplot(df, columna, titulo, nombre_archivo):
+def graficar_boxplot(df, columna, titulo, ruta_salida):
     """
-    Genera un gráfico boxplot de una columna específica.
+    Genera un gráfico boxplot de una columna específica y lo guarda como imagen.
 
     Parámetros:
     - df: DataFrame de pandas con los datos
     - columna: nombre de la columna numérica a graficar (ej: 'ventas')
     - titulo: título que aparecerá en el gráfico
-    - nombre_archivo: nombre del archivo .png a guardar
+    - ruta_salida: ruta completa del archivo .png a guardar
     """
     if df is None or columna not in df.columns:
         print(f"⚠️ Datos inválidos o columna '{columna}' no encontrada.")
         return
+
+    os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
 
     plt.figure(figsize=(8, 4))
     sns.boxplot(x=df[columna], color="#2E86C1")
@@ -43,31 +56,40 @@ def graficar_boxplot(df, columna, titulo, nombre_archivo):
     plt.xlabel(columna)
     plt.tight_layout()
 
-    plt.savefig(nombre_archivo)
-    plt.close()
-    print(f"📈 Gráfico guardado como {nombre_archivo}")
+    try:
+        plt.savefig(ruta_salida)
+        print(f"📈 Gráfico guardado como {ruta_salida}")
+    except Exception as e:
+        print(f"❌ Error al guardar gráfico: {str(e)}")
+    finally:
+        plt.close()
 
 
-if __name__ == "__main__":
-    # Rutas relativas
-    ruta_original = os.path.join("ventas.csv")
-    ruta_limpia = os.path.join("ventas_limpias.csv")
-
+def main():
     # Cargar datos
-    datos_originales = cargar_datos(ruta_original)
-    datos_limpios = cargar_datos(ruta_limpia)
+    df_original = cargar_datos(ORIGINAL_CSV)
+    df_limpio = cargar_datos(LIMPIO_CSV)
 
     # Generar gráficos
     graficar_boxplot(
-        datos_originales,
+        df_original,
         columna="ventas",
         titulo="Distribución de Ventas (Antes de limpieza)",
-        nombre_archivo="assets/images/boxplot_antes.png"
+        ruta_salida=IMG_ANTES
     )
 
     graficar_boxplot(
-        datos_limpios,
+        df_limpio,
         columna="ventas",
         titulo="Distribución de Ventas (Después de limpieza)",
-        nombre_archivo="assets/images/boxplot_despues.png"
+        ruta_salida=IMG_DESPUES
     )
+
+
+if __name__ == "__main__":
+    try:
+        main()
+        sys.exit(0)
+    except Exception as e:
+        print(f"❌ Error inesperado: {str(e)}")
+        sys.exit(1)
