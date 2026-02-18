@@ -1,110 +1,116 @@
-# Limpieza de Datos con Python y Pandas
+# Limpieza de Datos con Python y Pandas (ETL Pipeline)
 
-![Diagrama BPMN](assets/images/bpmn-diagram.png)
+Badges: Python | AWS | GitHub Actions | MIT License
 
-## Descripción
+## 📝 Descripción
+Pipeline de datos automatizado (ETL: Extract, Transform, Load) diseñado para la limpieza de datasets mediante el método estadístico IQR (Rango Intercuartílico) para la detección y eliminación de outliers.
 
-Este proyecto incluye un script que elimina **outliers** en un dataset de ventas utilizando el método **IQR (Rango Intercuartílico)**.
+Este proyecto implementa CI/CD con GitHub Actions para cargar automáticamente los datos procesados a un bucket de AWS S3.
 
-**Casos de uso**:
+Casos de uso:
+- Preparación de datos para análisis financiero y auditorías.
+- Limpieza automatizada de datos crudos antes de ingestas en Data Warehouses.
+- Ejemplo práctico de arquitectura serverless y automatización de tareas.
 
-- Ideal para analítica financiera y auditorías de datos.
-- Almacena los resultados procesados en **AWS S3** para almacenamiento seguro y accesible.
+## 🏗️ Arquitectura del Proyecto
+Flujo de datos desde la fuente local hasta el almacenamiento en la nube:
 
-## Tecnologías
+```mermaid
+flowchart LR
+    A["📁 Dataset Local: ventas.csv"] -->|Input| B("🐍 Script Python: process_data.py")
+    B -->|Lógica: IQR & Pandas| C["📊 Dataset Limpio: ventas_limpias.csv"]
+    C -->|Git Push| D["🐙 GitHub Repository"]
+    D -->|Trigger| E{"⚙️ GitHub Actions"}
+    E -->|Config Creds| F["☁️ AWS S3 Bucket"]
+    F -->|Output Final| G["✅ Archivo Procesado en la Nube"]
 
-- **Python**: Lenguaje principal.
-- **Pandas**: Librería para manipulación y análisis de datos.
-- **AWS S3 y Boto3**: Servicios y librerías para almacenamiento en la nube.
+    %% Styles
+    classDef py fill:#3776ab,stroke:#333,stroke-width:2px,color:#fff;
+    classDef gha fill:#2088FF,stroke:#333,stroke-width:2px,color:#fff;
+    classDef s3 fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff;
 
-## Estructura del Proyecto
+    class B py;
+    class E gha;
+    class F s3;
+```
 
-```plaintext
+## 🚀 Tecnologías Utilizadas
+- Python: Lenguaje principal para la lógica de procesamiento.
+- Pandas: Librería para manipulación y análisis de datos.
+- AWS S3: Almacenamiento de objetos escalable (Data Lake).
+- Boto3: SDK de AWS para Python.
+- GitHub Actions: Automatización de flujos de trabajo (CI/CD).
+
+## 📂 Estructura del Proyecto
+```
 LIMPIEZA_DATOS/
 ├── .github/
 │   └── workflows/
-│       └── deploy-to-s3.yml
-├── .qodo/  (archivos personales ignorados)
-├── env/  (entorno virtual, ignorado en .gitignore)
-├── ventas.csv  (dataset de entrada)
-├── ventas_limpias.csv  (dataset limpio generado por el script)
-├── README.md
-├── process_data.py  (script principal del proyecto)
-└── aws-s3.png  (imagen de referencia para S3)
+│       └── deploy-to-s3.yml   # Configuración CI/CD
+├── assets/
+│   └── images/                # Diagramas y recursos
+├── scripts/                   # Scripts auxiliares (opcional)
+├── uploads/                   # Carpeta de entrada/salida local
+├── .gitignore                 # Archivos ignorados por Git
+├── process_data.py            # Script principal (ETL)
+├── ventas.csv                 # Dataset de entrada (Raw)
+├── ventas_limpias.csv         # Dataset procesado (Clean)
+├── requirements.txt           # Dependencias del proyecto
+└── README.md
 ```
 
-## Instalación
-
-1. Clona el repositorio:
+## ⚙️ Instalación y Configuración
+1. Clonar el Repositorio
    ```bash
    git clone https://github.com/jotalexvalencia/limpieza-datos-python-pandas.git
-   ```
-2. Navega al directorio del proyecto:
-   ```bash
    cd limpieza-datos-python-pandas
    ```
-3. Instala las dependencias: Si trabajas con un entorno virtual, actívalo antes de instalar las dependencias:
+2. Crear Entorno Virtual (recomendado)
    ```bash
-   pip install pandas boto3
+   # Windows
+   python -m venv env
+   env\Scripts\activate
+
+   # macOS/Linux
+   python3 -m venv env
+   source env/bin/activate
    ```
+3. Instalar Dependencias
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Configuración de AWS
+   Asegúrate de tener configuradas tus credenciales de AWS localmente o como Secrets en tu repositorio de GitHub (AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY).
 
-## Uso
-
-1. Configura tu archivo `ventas.csv` con los datos a analizar (debe estar en el directorio raíz del proyecto).
-2. Ejecuta el script:
-
+## 🛠️ Uso
+1. Coloca tu archivo de datos crudos en la raíz del proyecto con el nombre `ventas.csv`.
+2. Ejecuta el script de limpieza:
    ```bash
    python process_data.py
    ```
-3. Resultados:
+3. Se generará `ventas_limpias.csv` eliminando los valores atípicos detectados por el método IQR.
 
-   - El archivo limpio `ventas_limpias.csv` será generado automáticamente.
-   - Será cargado al bucket configurado en AWS S3.
+## 🤖 Automatización (CI/CD)
+Este proyecto utiliza GitHub Actions para desplegar automáticamente el archivo procesado a AWS S3 cada vez que se realiza un push a la rama `dev-python`.
 
-## Flujo de Trabajo Automatizado
+Flujo del workflow:
+- Checkout: Descarga el código del repositorio.
+- Setup: Configura las credenciales de AWS de forma segura usando Secrets.
+- Deploy: Sube el archivo `ventas_limpias.csv` al bucket S3 especificado.
 
-Este proyecto incluye un workflow de GitHub Actions que automatiza el despliegue del archivo procesado a AWS S3.
+## 📊 Ejemplo de Lógica (IQR)
+El script utiliza el Rango Intercuartílico para filtrar datos anómalos:
 
-- **Activación**: Se ejecuta cada vez que hay un push en la rama principal (dev-python).
-- **Configuración**: Utiliza credenciales seguras almacenadas como Secrets en GitHub.
-- **Detalles**: Consulta el archivo `.github/workflows/deploy-to-s3.yml` para más información.
+1. Calcular Q1 (25%) y Q3 (75%).
+2. Obtener IQR = Q3 - Q1.
+3. Definir límites:
+   - Inferior: Q1 - 1.5 * IQR
+   - Superior: Q3 + 1.5 * IQR
+4. Mantener solo los datos dentro de esos límites.
 
-## Ejemplo de Salida
+## 👤 Autor
+Jorge Alexander Valencia Valencia  
+LinkedIn | GitHub
 
-**Input**:
-Archivo `ventas.csv`:
-
-```
-Producto,Precio,Cantidad
-Producto_A,1000,10
-Producto_B,5000,3
-Producto_C,200,50
-```
-
-**Output**:
-Archivo `ventas_limpias.csv`:
-
-```
-Producto,Precio,Cantidad
-Producto_A,1000,10
-Producto_B,5000,3
-Producto_C,200,50
-```
-
-Archivo cargado a AWS S3:
-El archivo `ventas_limpias.csv` se carga automáticamente a AWS S3 utilizando el bucket configurado en el archivo `aws-s3.png`.
-
-## Referencias
-
-- [GitHub Actions](https://docs.github.com/en/actions)
-- [AWS S3](https://aws.amazon.com/es/s3/)
-- [Pandas](https://pandas.pydata.org/)
-- [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
-
-## Autor
-
-Jorge Alexander Valencia Valencia
-
-## Licencia
-
-Este proyecto está bajo la [Licencia MIT](LICENSE) © 2025 Jorge Alexander Valencia Valencia. Para más detalles, consulta el archivo `LICENSE`.
+## 📄 Licencia
+Este proyecto está bajo la Licencia MIT.
