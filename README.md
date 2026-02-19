@@ -53,6 +53,7 @@ flowchart LR
 
 ## 📂 Estructura del Proyecto
 
+```text
 LIMPIEZA_DATOS/
 ├── .github/
 │   └── workflows/
@@ -70,6 +71,7 @@ LIMPIEZA_DATOS/
 ├── ventas_limpias.csv         # Dataset procesado (Clean)
 ├── requirements.txt           # Dependencias del proyecto
 └── README.md
+```
 
 ## ⚙️ Instalación y Configuración
 
