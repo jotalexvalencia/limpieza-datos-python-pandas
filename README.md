@@ -1,10 +1,10 @@
-Limpieza de Datos con Python y Pandas (ETL Pipeline)
+### Limpieza de Datos con Python y Pandas (ETL Pipeline)
 ![1771530591706](image/README/1771530591706.png)
 ![1771530602772](image/README/1771530602772.png)
 ![1771530629100](image/README/1771530629100.png)
 ![1771530640664](image/README/1771530640664.png)
 
-📝 Descripción
+## 📝 Descripción
 Pipeline de datos automatizado (ETL: Extract, Transform, Load) diseñado para la limpieza de datasets mediante el método estadístico IQR (Rango Intercuartílico) para la detección y eliminación de outliers.
 
 Este proyecto implementa una API REST con FastAPI para la gestión web y un pipeline de CI/CD con GitHub Actions para cargar automáticamente los datos procesados a un bucket de AWS S3.
@@ -14,7 +14,8 @@ Casos de uso:
 Preparación de datos para análisis financiero y auditorías.
 Limpieza automatizada de datos crudos antes de ingestas en Data Warehouses.
 Ejemplo práctico de arquitectura serverless y automatización de tareas.
-🏗️ Arquitectura del Proyecto
+
+## 🏗️ Arquitectura del Proyecto
 Flujo de datos desde la fuente local hasta el almacenamiento en la nube:
 
 ```mermaid
@@ -35,15 +36,15 @@ flowchart LR
     class F s3;
 ```
 
-🚀 Tecnologías Utilizadas
-Python: Lenguaje principal para la lógica de procesamiento.
-Pandas: Librería para manipulación y análisis de datos.
-FastAPI: Framework para la construcción de APIs REST.
-AWS S3: Almacenamiento de objetos escalable (Data Lake).
-Boto3: SDK de AWS para Python.
-GitHub Actions: Automatización de flujos de trabajo (CI/CD).
+## 🚀 Tecnologías Utilizadas
+- Python: Lenguaje principal para la lógica de procesamiento.
+- Pandas: Librería para manipulación y análisis de datos.
+- FastAPI: Framework para la construcción de APIs REST.
+- AWS S3: Almacenamiento de objetos escalable (Data Lake).
+- Boto3: SDK de AWS para Python.
+- GitHub Actions: Automatización de flujos de trabajo (CI/CD).
 
-📂 Estructura del Proyecto
+## 📂 Estructura del Proyecto
 
 LIMPIEZA_DATOS/
 ├── .github/
@@ -63,7 +64,7 @@ LIMPIEZA_DATOS/
 ├── requirements.txt           # Dependencias del proyecto
 └── README.md
 
-⚙️ Instalación y Configuración
+## ⚙️ Instalación y Configuración
 1. Clonar el Repositorio
 git clone https://github.com/jotalexvalencia/limpieza-datos-python-pandas.git
 cd limpieza-datos-python-pandas
@@ -80,9 +81,9 @@ cd limpieza-datos-python-pandas
 4. Configuración de AWS
    Asegúrate de tener configuradas tus credenciales de AWS localmente o como Secrets en tu repositorio de GitHub (AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY).
 
-🛠️ Uso
+## 🛠️ Uso
 
-Opción A: Ejecutar la API Web (Recomendado)
+# Opción A: Ejecutar la API Web (Recomendado)
 
 1. Inicia el servidor:
 uvicorn main:app --reload
@@ -90,14 +91,14 @@ uvicorn main:app --reload
 2. Abre tu navegador en http://127.0.0.1:8000.
 3. Usa la interfaz para subir tu archivo ventas.csv.
    
-Opción B: Ejecutar Script Manualmente
+# Opción B: Ejecutar Script Manualmente
 
 1. Coloca tu archivo de datos crudos en la raíz con el nombre ventas.csv.
 2. Ejecuta el script de limpieza:
 python scripts/process_data.py
 3. Se generará ventas_limpias.csv.
 
-🤖 Automatización (CI/CD)
+## 🤖 Automatización (CI/CD)
 
 Este proyecto utiliza GitHub Actions para desplegar automáticamente el archivo procesado a AWS S3 cada vez que se realiza un push a la rama dev-python.
 
@@ -107,7 +108,7 @@ Checkout: Descarga el código del repositorio.
 Setup: Configura las credenciales de AWS de forma segura usando Secrets.
 Deploy: Sube el archivo ventas_limpias.csv al bucket S3 especificado.
 
-📊 Ejemplo de Lógica (IQR)
+## 📊 Ejemplo de Lógica (IQR)
 El script utiliza el Rango Intercuartílico para filtrar datos anómalos:
 
 1. Calcular Q1 (25%) y Q3 (75%).
@@ -117,9 +118,9 @@ El script utiliza el Rango Intercuartílico para filtrar datos anómalos:
    - Superior: Q3 + 1.5 * IQR
 4. Mantener solo los datos dentro de esos límites.
    
-👤 Autor
+## 👤 Autor
 Jorge Alexander Valencia Valencia
 [LinkedIn](https://www.linkedin.com/in/jorgealexandervalencia/) | [GitHub](https://github.com/jotalexvalencia)
 
-📄 Licencia
+## 📄 Licencia
 Este proyecto está bajo la Licencia MIT.
