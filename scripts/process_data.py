@@ -1,53 +1,62 @@
 # === scripts/process_data.py ===
-# Limpieza de datos de ventas (eliminación de outliers y validación de estructura)
-
 import pandas as pd
 import os
 import sys
 
-# === 📍 Rutas de entrada/salida ===
-ENTRADA = "ventas.csv"
-SALIDA = "ventas_limpias.csv"
-
-try:
-    # === 📂 Validación de existencia ===
-    if not os.path.exists(ENTRADA):
-        raise FileNotFoundError(f"❌ El archivo '{ENTRADA}' no fue encontrado.")
-
-    # === 📥 Cargar datos desde CSV ===
-    df = pd.read_csv(ENTRADA)
-
-    # === ✅ Validar estructura de columnas ===
+# === 🧠 Función Pura (Lógica de Negocio) ===
+def limpiar_datos(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Cleans the sales DataFrame by removing nulls and outliers.
+    
+    Args:
+        df (pd.DataFrame): Raw input data with 'ventas' column.
+        
+    Returns:
+        pd.DataFrame: Cleaned data without outliers.
+        
+    Raises:
+        ValueError: If columns are missing.
+    """
+    # Validate structure
     esperadas = ['fecha', 'producto', 'ventas', 'region']
     if list(df.columns) != esperadas:
-        raise ValueError(f"❌ Columnas inválidas. Se esperaban: {esperadas}, se recibieron: {list(df.columns)}")
+        raise ValueError(f"Invalid columns. Expected: {esperadas}")
 
-    # === 🔄 Conversión de tipos ===
+    # Type conversion
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
     df['ventas'] = pd.to_numeric(df['ventas'], errors='coerce')
 
-    # === 🧹 Eliminar nulos ===
+    # Drop nulls
     df.dropna(inplace=True)
 
-    # === 📊 Detección de outliers por IQR ===
+    # IQR Outlier Detection
     Q1 = df['ventas'].quantile(0.25)
     Q3 = df['ventas'].quantile(0.75)
     IQR = Q3 - Q1
     lim_inf = Q1 - 1.5 * IQR
     lim_sup = Q3 + 1.5 * IQR
 
-    antes = len(df)
     df = df[(df['ventas'] >= lim_inf) & (df['ventas'] <= lim_sup)]
-    despues = len(df)
+    return df
 
-    # === 💾 Guardar archivo limpio ===
-    df.to_csv(SALIDA, index=False)
+# === 🚀 Ejecución Principal (Script) ===
+if __name__ == "__main__":
+    ENTRADA = "ventas.csv"
+    SALIDA = "ventas_limpias.csv"
+    
+    try:
+        if not os.path.exists(ENTRADA):
+            raise FileNotFoundError(f"❌ El archivo '{ENTRADA}' no fue encontrado.")
 
-    # === 📋 Log final ===
-    print(f"✅ Limpieza completada: {SALIDA}")
-    print(f"🧾 Registros antes: {antes} | después: {despues} | eliminados: {antes - despues}")
-    sys.exit(0)
+        df = pd.read_csv(ENTRADA)
+        df_limpio = limpiar_datos(df) # Llamamos a la función pura
+        
+        df_limpio.to_csv(SALIDA, index=False)
+        
+        print(f"✅ Limpieza completada: {SALIDA}")
+        print(f"🧾 Registros eliminados: {len(df) - len(df_limpio)}")
+        sys.exit(0)
 
-except Exception as e:
-    print(f"❌ Error en limpieza de datos: {str(e)}")
-    sys.exit(1)
+    except Exception as e:
+        print(f"❌ Error en limpieza de datos: {str(e)}")
+        sys.exit(1)
